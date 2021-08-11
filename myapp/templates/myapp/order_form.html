@@ -1,0 +1,23 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="col-6 offset-3">
+        {% if create %}
+            <h3>依頼を新規作成</h3>
+        {% elif update %}
+            <h3>依頼を変更</h3>
+        {% endif %}
+        <hr>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.as_table}}
+            {% if create %}
+                <button type="submit" class="btn btn-primary mt-3">新規作成</button>
+            {% elif update %}
+                <button type="submit" class="btn btn-warning mt-3">変更</button>
+            {% endif %}
+            <a class="btn btn-outline-secondary mt-3 ms-4" href="{{request.META.HTTP_REFERER}}">キャンセル</a>
+        </form>
+    </div>
+{% endblock %}

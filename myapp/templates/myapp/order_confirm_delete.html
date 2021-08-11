@@ -1,0 +1,24 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="card col-6 offset-3">
+        <div class="card-header">
+            依頼を削除
+        </div>
+        <div class="card-body text-center">
+            <p>以下の依頼を削除します。よろしいですか？</p>
+            <ul class="list-unstyled">
+                <li>依頼No. {{ order.pk }}</li>
+                <li>依頼日: {{ order.order_date }}</li>
+                <li>品名: {{ order }}</li>
+            </ul>
+        </div>
+        <div class="card-footer d-flex justify-content-around">
+            <a class="btn btn-outline-secondary" href="{{request.META.HTTP_REFERER}}">キャンセル</a>
+            <form action="" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">削除</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

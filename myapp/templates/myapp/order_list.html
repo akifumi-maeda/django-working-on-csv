@@ -1,0 +1,128 @@
+{% extends 'base_generic.html' %}
+
+{% block tablesorter %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.tablesorter.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+{% endblock %}
+
+{% block active_orders %}active{% endblock %}
+
+{% block content %}
+    <div class="d-sm-flex justify-content-between ">
+        <h2>オーダー一覧</h2>
+        <div>
+            <a class="btn btn-primary" href="{% url 'order_create' %}" role="button">
+                <i class="fas fa-plus-circle"></i>
+                <span>依頼を新規作成</span>
+            </a>
+            <a class="btn btn-success" href="{% url 'import' %}" role="button">
+                <i class="fas fa-arrow-circle-up"></i>
+                <span>CSV/TSVファイルをインポート</span>
+            </a>
+            <a class="btn btn-secondary" href="{% url 'export' %}" role="button">
+                <i class="fas fa-download"></i>
+                <span>CSVファイルをダウンロード</span>
+            </a>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="d-sm-inline-flex align-items-center">
+        <form action="" method="get">
+            <div class="input-group">
+                <input class="form-control" type="search" name="search" {% if request.GET.search %}value="{{ request.GET.search }}"{% endif %} placeholder="Search" novalidate>
+                <button type="submit" class="btn btn-outline-secondary">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+        <a class="btn btn-secondary ms-3" data-bs-toggle="collapse" href="#collapseFilter" role="button" aria-expanded="false" aria-controls="collapseFilter">
+            <i class="fas fa-filter"></i>
+        </a>
+    </div>
+    <div class="collapse" id="collapseFilter">
+        <div class="card card-body">
+            <div class="row mt-3">
+                <div class="col-sm-8 col-md-6">
+                    <form action="" method="get">
+                        {{ query_date_period_form.non_field_errors }}
+                        {% for field in query_date_period_form %}
+                            <dl>
+                                <dt>{{ field.label_tag }}</dt>
+                                <dd>
+                                    <div class="input-group">{{ field }}</div>
+                                </dd>
+                            </dl>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-dark">絞り込む</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% if order_list %}
+
+        <div class="table-responsive">
+            <table id="myTable" class="table table-light table-striped tablesorter">
+                <thead>
+                    <tr>
+                        <th scope="col">依頼No.</th>
+                        <th scope="col">受注日</th>
+                        <th scope="col">管理番号</th>
+                        <th scope="col">管理コード</th>
+                        <th scope="col">品名</th>
+                        <th scope="col">ロットNo.</th>
+                        <th scope="col">作業内容</th>
+                        <th scope="col">単価</th>
+                        <th scope="col">受注数</th>
+                        <th scope="col">アクション</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_list %}
+                        <tr>
+                            <th scope="row">{{ order.pk }}</th>
+                            <td>{{ order.order_date }}</td>
+                            <td>{{ order.management_number }}</td>
+                            <td>{{ order.management_code }}</td>
+                            <td>{{ order }}</td>
+                            <td>{{ order.lot_number }}</td>
+                            <td>{{ order.work_content }}</td>
+                            <td>{{ order.unit_price }}</td>
+                            <td>{{ order.number }}</td>
+                            <td>
+                                <a class="text-primary mx-1" href="{% url 'order_detail' order.pk %}" data-bs-toggle="tooltip" data-bs-placement="top" title="詳細">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a class="text-warning mx-1" href="{% url 'order_update' order.pk %}" data-bs-toggle="tooltip" data-bs-placement="top" title="編集">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                                <a class="text-danger mx-1" href="{% url 'order_delete' order.pk %}" data-bs-toggle="tooltip" data-bs-placement="top" title="削除">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>オーダーが存在しません。</p>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).ready(function() {
+            $('#myTable').tablesorter({
+                    headers: {
+                    9: { sorter: false }
+                    }
+            });
+        });
+    </script>
+{% endblock %}

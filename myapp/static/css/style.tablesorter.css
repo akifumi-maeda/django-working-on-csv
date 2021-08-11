@@ -1,0 +1,38 @@
+/* 未ソートのアイコン */
+.tablesorter-headerUnSorted:not(.sorter-false) .tablesorter-header-inner::after {
+    content: "";
+    display: inline-block;
+    margin-left: 2px;
+    width: 20px;
+    height: 20px;
+    background-image: url("/static/img/sort-solid.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}
+
+/* 昇順ソートのアイコン */
+.tablesorter-headerAsc:not(.sorter-false) .tablesorter-header-inner::after {
+    content: "";
+    display: inline-block;
+    margin-left: 2px;
+    width: 20px;
+    height: 20px;
+    background-image: url("/static/img/sort-up-solid.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}
+
+/* 昇順ソートのアイコン */
+.tablesorter-headerDesc:not(.sorter-false) .tablesorter-header-inner::after {
+    content: "";
+    display: inline-block;
+    margin-left: 2px;
+    width: 20px;
+    height: 20px;
+    background-image: url("/static/img/sort-down-solid.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    vertical-align: middle;
+}

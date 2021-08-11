@@ -1,0 +1,31 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="col-6 offset-3">
+        <h3>CSV/TSVファイルから依頼を一括インポート</h3>
+        <hr>
+        <form class="needs-validation" novalidate action="import" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.file.errors }}
+            {% if message %}
+                <ul class="errorlist">
+                    <li>{{ message }}</li>
+                </ul>
+            {% endif %}
+            <div class="input-group has-validation">
+                {{ form.file }}
+                <button class="btn btn-outline-secondary file-input-button" type="submit">インポート</button>
+                <div class="invalid-feedback">
+                    ファイルが選択されていません。
+                </div>
+            </div>
+            {{ form.file.help_text }}
+        </form>
+        <a class="btn btn-outline-secondary mt-3" href="{{request.META.HTTP_REFERER}}">キャンセル</a>
+    </div>
+{% endblock %}
+
+{% block js %}
+    {% load static %}
+    <script src="{% static 'js/formValidation.js' %}"></script>
+{% endblock %}

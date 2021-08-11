@@ -1,0 +1,10 @@
+/* フォームエラーのスタイル */
+.errorlist {
+    list-style: none;
+    color: red;
+}
+
+/* リンク下線を非表示 */
+a {
+    text-decoration: none;
+ }

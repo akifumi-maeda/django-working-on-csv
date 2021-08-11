@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working on CSV</title>
+    <!-- Bootstrap CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e8a62318c0.js" crossorigin="anonymous"></script>
+    <!-- load jQuery and tablesorter using block -->
+    {% block tablesorter %}{% endblock %}
+</head>
+<body class="d-flex flex-column h-100">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container-lg">
+                <a class="navbar-brand" href="{% url 'index' %}">Working on CSV</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link {% block active_home %}{% endblock %} p-2" href="{% url 'index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% block active_orders %}{% endblock %} p-2" href="{% url 'order_list' %}">オーダー一覧</a>
+                        </li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-outline-secondary"　role="button" href="{% url 'logout' %}?next={{request.path}}">ログアウト</a>
+                    {% else %}
+                        <a class="btn btn-outline-secondary"　role="button" href="{% url 'login' %}?next={{request.path}}">ログイン</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-shrink-0">
+        <div class="container-xl my-4">
+            {% block content %}{% endblock %}
+
+            {% block pagination %}
+              <br>
+              <div class="d-sm-flex justify-content-between">
+                  {% if paginate_by_form %}
+                  <div class="d-flex align-items-center">
+                      <form class="paginate-by-form" action="" method="get">
+                          {{ paginate_by_form.paginate_by }}
+                      </form>
+                      <span class="ms-2">rows per page</span>
+                  </div>
+                  {% endif %}
+
+                  {% if is_paginated %}
+                  <nav class="mt-2 mt-sm-0" aria-label="Page navigation">
+                      <ul class="pagination">
+                          {% if page_obj.has_previous %}
+                              <li class="page-item">
+                                  <a class="page-link" href="{{ request.path }}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                      <span aria-hidden="true">&laquo;</span>
+                                  </a>
+                              </li>
+                          {% endif %}
+                          {% for i in page_obj.paginator.page_range %}
+                              {% if page_obj.number == i %}
+                                  <li class="page-item active" aria-current="page">
+                                      <a class="page-link" href="{{ request.path }}?page={{i}}">{{i}}</a>
+                                  </li>
+                              {% else %}
+                                  <li class=""page-item>
+                                      <a class="page-link" href="{{ request.path }}?page={{i}}">{{i}}</a>
+                                  </li>
+                              {% endif %}
+                          {% endfor %}
+                          {% if page_obj.has_next %}
+                              <li class="page-item">
+                                  <a class="page-link" href="{{ request.path }}?page={{ page_obj.next_page_number }}" aria-label="Next">&raquo;</a>
+                              </li>
+                          {% endif %}
+                      </ul>
+                  </nav>
+                  {% endif %}
+              </div>
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container">
+            <span class="text-white"><small>&copy;</small> 2021 Working on CSV</span>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JavaScript-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <!-- handlePaginateByForm.js -->
+    <script src="{% static 'js/handlePaginateByForm.js' %}"></script>
+    <!-- Add additional JS in static file using block -->
+    {% block js %}{% endblock %}
+</body>
+</html>
